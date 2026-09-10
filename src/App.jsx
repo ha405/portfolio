@@ -15,7 +15,7 @@ import './App.css';
 
 const DATA = {
   name: 'Muhammad Haseeb',
-  title: 'Machine Learning Engineer',
+  title: 'Software Engineer & ML Systems',
   location: 'Lahore, Pakistan',
   email: 'haseeb099m@gmail.com',
   github: 'https://github.com/ha405',
@@ -45,8 +45,9 @@ const DATA = {
       name: 'Agents and automation',
       lead: 'Put the repetitive work on rails.',
       problem: 'Your team is probably doing work a system could do.',
-      desc: "I build the agents and pipelines that take it over: tools wired into the software you already run, retrieval over your own code and documents, and evaluation so you can see when quality slips. They run unattended, and they fail loudly instead of quietly.",
+      desc: "I build the agents and pipelines that take it over, and the product surface around them: tools wired into the software you already run, retrieval over your own code and documents, and evaluation so you can see when quality slips. They run unattended, and they fail loudly instead of quietly.",
       points: [
+        'Full-stack product engineering, frontend to backend',
         'Multi-agent systems and tool design',
         'MCP servers over your internal tools',
         'Retrieval over codebases and documents',
@@ -78,10 +79,21 @@ const DATA = {
 
   work: [
     {
+      role: 'Founding Product Engineer',
+      company: 'NEXA',
+      note: 'Team Lead',
+      period: 'Since May 2026',
+      bullets: [
+        'Own end-to-end product engineering: backend architecture, frontend delivery, and AI integration into production workflows.',
+        'Lead technical and product decisions as a founding engineer, turning early customer needs into AI-powered features under rapid iteration.',
+      ],
+      stack: ['Next.js', 'Node.js', 'AWS'],
+    },
+    {
       role: 'OSS Engineer',
       company: 'DatacurveAI',
       note: 'YC S24',
-      period: 'Dec 2025 to Feb 2026',
+      period: 'Dec 2025 to March 2026',
       bullets: [
         'Shipped features and fixed issues across core open-source ML repositories.',
         'Filtered training instances in the model training pipeline to improve performance on coding tasks.',

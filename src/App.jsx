@@ -216,14 +216,15 @@ const DATA = {
         "Two ways of shrinking a model were tested against the same starting point, so the results are directly comparable. Quantization forces every weight onto a coarser scale, either an evenly spaced one, or one that adapts to where the model's weights are actually concentrated. Both were tried at a light and a heavy setting, with a short retraining pass afterward to recover some of what compression costs.",
         "For this run: a standard image classifier, quantized both ways at both settings, and measured the same way each time.",
       ],
-      baseline: { label: 'Original model', size: '58.25 MB', latency: '7.6 ms' },
+      columns: ['Size', 'Speed', 'Accuracy'],
+      baseline: { label: 'Original model', values: ['58.25 MB', '7.6 ms', '93.6%'] },
       results: [
-        { method: 'Fixed-scale quantization, light', size: '14.57 MB', accuracy: '93.6% accuracy (−0.1 pt)' },
-        { method: 'Adaptive quantization, light', size: '14.67 MB', accuracy: '93.5% accuracy (−0.2 pt)' },
-        { method: 'Adaptive quantization, heavy', size: '14.66 MB', accuracy: '82.4% accuracy (−11.2 pt)' },
-        { method: 'Fixed-scale quantization, heavy', size: '14.57 MB', accuracy: '67.5% accuracy (−26.1 pt)' },
+        { method: 'Fixed-scale quantization, light', values: ['14.57 MB', '29.9 ms', '93.6% (−0.1 pt)'] },
+        { method: 'Adaptive quantization, light', values: ['14.67 MB', '14.1 ms', '93.5% (−0.2 pt)'] },
+        { method: 'Adaptive quantization, heavy', values: ['14.66 MB', '13.9 ms', '82.4% (−11.2 pt)'] },
+        { method: 'Fixed-scale quantization, heavy', values: ['14.57 MB', '14.1 ms', '67.5% (−26.1 pt)'] },
       ],
-      note: "At the light setting, the method barely matters: both stay within 0.2 points of the original. Pushed harder, they split badly, an 11-point drop for the adaptive method against a 26-point drop for the fixed-scale one, on the identical model and data, because the adaptive method adjusts to the model's actual weights and the fixed-scale one doesn't. Two things worth knowing plainly: the file size barely changed between the light and heavy settings, and nothing here ran faster than the original. Shrinking the numbers doesn't shrink the file or speed anything up by itself, both need extra work on top, exporting to hardware built to run compressed math and packing the file to match. That's real, separate work, not a side effect of compression.",
+      note: "At the light setting, the method barely matters: both stay within 0.2 points of the original. Pushed harder, they split badly, an 11-point drop for the adaptive method against a 26-point drop for the fixed-scale one, on the identical model and data, because the adaptive method adjusts to the model's actual weights and the fixed-scale one doesn't. Two things worth knowing plainly: the file size barely changed between the light and heavy settings, and speed got worse, not better, in every case, four times worse for the slowest one. Shrinking the numbers doesn't shrink the file or speed anything up by itself, both need extra work on top, exporting to hardware built to run compressed math and packing the file to match. That's real, separate work, not a side effect of compression.",
       repo: 'https://github.com/ha405/Quantization',
     },
     {
@@ -237,10 +238,11 @@ const DATA = {
         "Pruning ranks every part of the network by how much it actually contributes to the result, not just by size, then removes the lowest-contributing parts down to a target level, and checks accuracy immediately, before any retraining. Only after that number is on record does the recovery training start, so the real cost of removing the structure stays visible instead of disappearing into the numbers that come after.",
         "For this run: the same classifier used above, with about four-fifths of its internal structure removed, then a retraining pass to recover.",
       ],
-      baseline: { label: 'Original model', size: '58.25 MB', latency: '13.82 ms' },
+      columns: ['Size', 'Speed', 'Accuracy'],
+      baseline: { label: 'Original model', values: ['58.25 MB', '13.82 ms', '93.6%'] },
       results: [
-        { method: 'Immediately after pruning', size: '11.14 MB', accuracy: '13.1% accuracy (−80.6 pt)' },
-        { method: 'After retraining', size: '11.14 MB', accuracy: '88.0% accuracy (−5.6 pt)' },
+        { method: 'Immediately after pruning', values: ['11.14 MB', '8.34 ms', '13.1% (−80.6 pt)'] },
+        { method: 'After retraining', values: ['11.14 MB', '8.34 ms', '88.0% (−5.6 pt)'] },
       ],
       note: "The number worth remembering isn't the final 88.0%, it's the 13.1% in between: removing that much structure destroys the model outright, and every point of the final accuracy came back through retraining, not from the pruning step itself. Budget that recovery phase as real project cost, not a footnote. The same pattern held on a harder version of the task, from 74.0% down to near zero right after pruning, back up to 64.4% after retraining. One thing this technique does that quantization above doesn't: it actually got faster, computation dropped by about 87% and latency fell by close to 40%, because removing structure cuts real work regardless of what hardware runs it. Quantization only pays off once there is dedicated hardware support behind it.",
       repo: 'https://github.com/ha405/Pruning',
@@ -256,12 +258,13 @@ const DATA = {
         "The same small model was trained four different ways against the same larger model and the same data, so the comparison isolates the training method rather than the architecture. Copying the larger model's final answers is the simplest form of supervision. Copying how it actually represents the problem internally, not just its answers, is a stronger and harder one to build. Splitting the problem across several much smaller specialist models is a third approach, aimed at cutting size rather than maximizing accuracy.",
         "For this run: a larger model, 73.5% accurate on its own, teaching a smaller one, compared against that same smaller model trained with no teacher at all, a version trained on the teacher's internal representations, and a group of four much smaller models, each trained on its own slice of the problem.",
       ],
-      baseline: { label: 'Teacher model', size: '33.6M params', latency: '73.5% accuracy' },
+      columns: ['Size', 'Accuracy'],
+      baseline: { label: 'Teacher model', values: ['33.6M params', '73.5%'] },
       results: [
-        { method: 'Student trained alone, no teacher', size: '28.5M params', accuracy: '48.0% accuracy (−25.5 pt vs teacher)' },
-        { method: "Trained on the teacher's answers", size: '28.5M params', accuracy: '48.7% accuracy (−24.8 pt vs teacher)' },
-        { method: "Trained on the teacher's internals", size: '9.2M params', accuracy: '56.8% accuracy (−16.7 pt vs teacher)' },
-        { method: 'Ensemble of 4 specialist models', size: '3.0M params', accuracy: '43.5% accuracy (−30.0 pt vs teacher)' },
+        { method: 'Student trained alone, no teacher', values: ['28.5M params', '48.0% (−25.5 pt vs teacher)'] },
+        { method: "Trained on the teacher's answers", values: ['28.5M params', '48.7% (−24.8 pt vs teacher)'] },
+        { method: "Trained on the teacher's internals", values: ['9.2M params', '56.8% (−16.7 pt vs teacher)'] },
+        { method: 'Ensemble of 4 specialist models', values: ['3.0M params', '43.5% (−30.0 pt vs teacher)'] },
       ],
       note: "Copying the teacher's answers barely helped, just 0.7 points over training the smaller model alone, because it could already guess the final answer on its own without much help. Copying how the teacher actually represents the problem helped far more, closing nearly a third of the gap to the teacher using a smaller model, not a bigger one. The ensemble of specialists traded accuracy for size, ending up under a tenth the parameters of the independently trained student, and that trade is worth making only when size is the real constraint, not accuracy: splitting the problem across separate models loses connections between parts that a single model naturally keeps.",
       repo: 'https://github.com/ha405/Knowledge-Distillation',
@@ -785,21 +788,33 @@ function CaseStudyEntry({ c }) {
             <thead>
               <tr className="study-row study-row--head">
                 <th scope="col">Configuration</th>
-                <th scope="col">Size</th>
-                <th scope="col">Result</th>
+                {c.columns.map((col) => (
+                  <th scope="col" key={col}>
+                    {col}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               <tr className="study-row study-row--baseline">
                 <td className="study-method">{c.baseline.label}</td>
-                <td className="study-metric">{c.baseline.size}</td>
-                <td className="study-metric">{c.baseline.latency}</td>
+                {c.baseline.values.map((v, i) => (
+                  <td className="study-metric" key={c.columns[i]}>
+                    {v}
+                  </td>
+                ))}
               </tr>
               {c.results.map((r) => (
                 <tr className="study-row" key={r.method}>
                   <td className="study-method">{r.method}</td>
-                  <td className="study-metric study-metric--accent">{r.size}</td>
-                  <td className="study-accuracy">{r.accuracy}</td>
+                  {r.values.map((v, i) => (
+                    <td
+                      className={`study-metric${i === r.values.length - 1 ? ' study-metric--result' : ''}`}
+                      key={c.columns[i]}
+                    >
+                      {v}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>

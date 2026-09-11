@@ -1306,8 +1306,7 @@ a {
   background: var(--paper-raised);
 }
 
-.study-row--head th:nth-child(2),
-.study-row--head th:nth-child(3) {
+.study-row--head th:not(:first-child) {
   text-align: right;
 }
 
@@ -1334,15 +1333,9 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
-.study-metric--accent {
+.study-metric--result {
   color: var(--accent);
   font-weight: 500;
-}
-
-.study-accuracy {
-  font-size: 0.8125rem;
-  color: var(--ink-faint);
-  text-align: right;
   white-space: nowrap;
 }
 

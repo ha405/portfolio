@@ -209,61 +209,61 @@ const DATA = {
       id: 'quantization',
       tag: 'Quantization',
       title: 'How much can a model shrink before something breaks?',
-      takeaway: 'At 4-bit, K-means clustering held 11 points of accuracy; fixed-point quantization lost 26, on the same model and data.',
+      takeaway: 'Pushed hard, one compression method held 11 points of accuracy; the other lost 26, on the same model and data.',
       objective:
         'Every model earmarked for production carries a hidden question: how much of its size is load-bearing, and how much is margin nobody has actually tested? Two compression methods can promise a similar footprint and land in completely different places on accuracy, and the only way to find out which is which is to run both against the same baseline and see exactly where each one breaks.',
       approach: [
-        "The method holds the model, the data, and the evaluation harness constant, then runs more than one compression technique against that same baseline so the failures are comparable instead of incidental. Fixed-point quantization forces every weight onto an evenly spaced grid regardless of how those weights are actually distributed. Clustering-based quantization instead learns where the weight distribution is dense and spends its precision there. Both were tested at 8-bit and 4-bit, with cluster centroids fine-tuned afterward to recover what the compression step predictably costs.",
-        "For this run: a VGG16-BN classifier (the chenyaofo/pytorch-cifar-models public CIFAR benchmark checkpoint) on CIFAR-10, compressed via fixed-point linear quantization and via per-layer K-means weight clustering, at 8-bit and 4-bit, evaluated on the same held-out test set with the same profiling harness throughout.",
+        "Two ways of shrinking a model were tested against the same starting point, so the results are directly comparable. Quantization forces every weight onto a coarser scale, either an evenly spaced one, or one that adapts to where the model's weights are actually concentrated. Both were tried at a light and a heavy setting, with a short retraining pass afterward to recover some of what compression costs.",
+        "For this run: a standard image classifier, quantized both ways at both settings, and measured the same way each time.",
       ],
-      baseline: { label: 'FP32 baseline', size: '58.25 MB', latency: '7.6 ms' },
+      baseline: { label: 'Original model', size: '58.25 MB', latency: '7.6 ms' },
       results: [
-        { method: 'Linear quantization, 8-bit', size: '14.57 MB', accuracy: '93.6% top-1 (−0.1 pt)' },
-        { method: 'K-means clustering, 8-bit', size: '14.67 MB', accuracy: '93.5% top-1 (−0.2 pt)' },
-        { method: 'K-means clustering, 4-bit', size: '14.66 MB', accuracy: '82.4% top-1 (−11.2 pt)' },
-        { method: 'Linear quantization, 4-bit', size: '14.57 MB', accuracy: '67.5% top-1 (−26.1 pt)' },
+        { method: 'Fixed-scale quantization, light', size: '14.57 MB', accuracy: '93.6% accuracy (−0.1 pt)' },
+        { method: 'Adaptive quantization, light', size: '14.67 MB', accuracy: '93.5% accuracy (−0.2 pt)' },
+        { method: 'Adaptive quantization, heavy', size: '14.66 MB', accuracy: '82.4% accuracy (−11.2 pt)' },
+        { method: 'Fixed-scale quantization, heavy', size: '14.57 MB', accuracy: '67.5% accuracy (−26.1 pt)' },
       ],
-      note: "At 8-bit, method barely matters: both hold within 0.2 points of the uncompressed baseline. At 4-bit they split hard, an 11-point drop for clustering against a 26-point drop for fixed-point quantization on the identical model and data, because clustering adapts to the weight distribution and fixed-point quantization doesn't. Two caveats worth stating plainly: on-disk size barely moved between 8-bit and 4-bit, since naive tensor serialization doesn't pack sub-byte values without custom bit-packing, so the realized compression here is roughly 4x against a theoretical ceiling closer to 8x. And nothing in this table ran faster than the FP32 baseline, since simulated low-bit weights still get dequantized to FP32 before every forward pass without a runtime built for low-bit compute — a real deployment win needs an export step (ONNX or TensorRT) on top of this, not instead of it. Structured pruning was tested too, as a further axis with its own overhead; the complete matrix is in the repository below.",
+      note: "At the light setting, the method barely matters: both stay within 0.2 points of the original. Pushed harder, they split badly, an 11-point drop for the adaptive method against a 26-point drop for the fixed-scale one, on the identical model and data, because the adaptive method adjusts to the model's actual weights and the fixed-scale one doesn't. Two things worth knowing plainly: the file size barely changed between the light and heavy settings, and nothing here ran faster than the original. Shrinking the numbers doesn't shrink the file or speed anything up by itself, both need extra work on top, exporting to hardware built to run compressed math and packing the file to match. That's real, separate work, not a side effect of compression.",
       repo: 'https://github.com/ha405/Quantization',
     },
     {
       id: 'pruning',
       tag: 'Pruning',
       title: 'What pruning actually costs before it pays off',
-      takeaway: 'Removing 81% of the channels collapses accuracy to 13% before 40 epochs of fine-tuning bring it to 88%.',
+      takeaway: 'Removing 81% of the structure collapses accuracy to 13% before retraining brings it back to 88%.',
       objective:
         "Removing structure from a trained network sounds like a clean way to cut inference cost: fewer channels, fewer computations, a smaller file. That framing skips the part in between, the moment right after the structure is gone and before anything has been retrained to live without it.",
       approach: [
-        "The method: rank each layer's channels by how much they actually contribute to the output, not just by weight magnitude, remove the lowest-contributing ones down to a target sparsity, and measure accuracy immediately, before any recovery training. Only after that number is on record does fine-tuning start, so the real cost of the pruning step stays visible instead of hidden behind a recovery phase that happens automatically in most write-ups.",
-        "For this run: a VGG16-BN classifier (chenyaofo/pytorch-cifar-models) on CIFAR-10, with channels ranked by saliency and removed structurally down to roughly 81% sparsity, then fine-tuned for 40 epochs.",
+        "Pruning ranks every part of the network by how much it actually contributes to the result, not just by size, then removes the lowest-contributing parts down to a target level, and checks accuracy immediately, before any retraining. Only after that number is on record does the recovery training start, so the real cost of removing the structure stays visible instead of disappearing into the numbers that come after.",
+        "For this run: the same classifier used above, with about four-fifths of its internal structure removed, then a retraining pass to recover.",
       ],
-      baseline: { label: 'FP32 baseline', size: '58.25 MB', latency: '13.82 ms' },
+      baseline: { label: 'Original model', size: '58.25 MB', latency: '13.82 ms' },
       results: [
-        { method: 'Immediately after pruning (81% sparsity)', size: '11.14 MB', accuracy: '13.1% top-1 (−80.6 pt)' },
-        { method: 'After 40 epochs of fine-tuning', size: '11.14 MB', accuracy: '88.0% top-1 (−5.6 pt)' },
+        { method: 'Immediately after pruning', size: '11.14 MB', accuracy: '13.1% accuracy (−80.6 pt)' },
+        { method: 'After retraining', size: '11.14 MB', accuracy: '88.0% accuracy (−5.6 pt)' },
       ],
-      note: "The number worth remembering isn't the final 88.0%, it's the 13.1% in between: removing 81% of the channels destroys the model outright, and every point of the final accuracy came back through 40 epochs of fine-tuning, not from the pruning step itself. Budget for that recovery phase as real project cost, not a footnote. The same pattern held on CIFAR-100 (1.0% immediately after pruning, 64.4% after recovery, against a 74.0% baseline). One thing this technique does that quantization above doesn't: latency actually dropped, from 13.82 ms to 8.34 ms, because removing channels cuts real computation (MACs fell from 314M to 41.78M) regardless of what runtime executes it. Quantization only pays off once the runtime has low-bit compute kernels to exploit.",
+      note: "The number worth remembering isn't the final 88.0%, it's the 13.1% in between: removing that much structure destroys the model outright, and every point of the final accuracy came back through retraining, not from the pruning step itself. Budget that recovery phase as real project cost, not a footnote. The same pattern held on a harder version of the task, from 74.0% down to near zero right after pruning, back up to 64.4% after retraining. One thing this technique does that quantization above doesn't: it actually got faster, computation dropped by about 87% and latency fell by close to 40%, because removing structure cuts real work regardless of what hardware runs it. Quantization only pays off once there is dedicated hardware support behind it.",
       repo: 'https://github.com/ha405/Pruning',
     },
     {
       id: 'distillation',
       tag: 'Distillation',
       title: 'When a smaller model can out-learn training it alone',
-      takeaway: "Matching a teacher's features beat matching its output, and did it with a smaller student either way.",
+      takeaway: "Copying how a teacher model thinks beat copying its answers, using a smaller model either way.",
       objective:
-        "A small model trained on its own and the same small model trained under supervision from a larger one can land in very different places, even with identical architecture, data, and compute budget. The question worth answering before picking a deployment-sized model is how much of that gap is recoverable, and which form of supervision actually recovers it.",
+        "A small model trained on its own and the same small model trained under supervision from a larger one can land in very different places, even with identical architecture, data, and training time. The question worth answering before picking a deployment-sized model is how much of that gap is recoverable, and which form of supervision actually recovers it.",
       approach: [
-        "The method: train the same small student architecture multiple ways against the same larger teacher and the same held-out test set, so the comparison isolates the supervision method rather than the architecture. Matching the teacher's final output distribution is the simplest form of supervision; matching its intermediate feature representations is a stronger, harder-to-implement one; splitting the problem across several smaller specialist models is a third strategy aimed at parameter count rather than accuracy.",
-        "For this run: a VGG16-BN teacher (73.5% top-1 on CIFAR-100) supervising a VGG11-BN student, compared against the same student trained independently with no teacher at all, a feature-distilled version of the same student, and an ensemble of four smaller specialist students trained on partitions of the teacher's feature space.",
+        "The same small model was trained four different ways against the same larger model and the same data, so the comparison isolates the training method rather than the architecture. Copying the larger model's final answers is the simplest form of supervision. Copying how it actually represents the problem internally, not just its answers, is a stronger and harder one to build. Splitting the problem across several much smaller specialist models is a third approach, aimed at cutting size rather than maximizing accuracy.",
+        "For this run: a larger model, 73.5% accurate on its own, teaching a smaller one, compared against that same smaller model trained with no teacher at all, a version trained on the teacher's internal representations, and a group of four much smaller models, each trained on its own slice of the problem.",
       ],
-      baseline: { label: 'Teacher — VGG16-BN', size: '33.6M params', latency: '73.5% top-1' },
+      baseline: { label: 'Teacher model', size: '33.6M params', latency: '73.5% accuracy' },
       results: [
-        { method: 'Independent student (no teacher)', size: '28.5M params', accuracy: '48.0% top-1 (−25.5 pt vs teacher)' },
-        { method: 'Logit matching (standard KD)', size: '28.5M params', accuracy: '48.7% top-1 (−24.8 pt vs teacher)' },
-        { method: 'Feature distillation (hints + KD)', size: '9.2M params', accuracy: '56.8% top-1 (−16.7 pt vs teacher)' },
-        { method: 'Ensemble of 4 specialist students', size: '3.0M params', accuracy: '43.5% top-1 (−30.0 pt vs teacher)' },
+        { method: 'Student trained alone, no teacher', size: '28.5M params', accuracy: '48.0% accuracy (−25.5 pt vs teacher)' },
+        { method: "Trained on the teacher's answers", size: '28.5M params', accuracy: '48.7% accuracy (−24.8 pt vs teacher)' },
+        { method: "Trained on the teacher's internals", size: '9.2M params', accuracy: '56.8% accuracy (−16.7 pt vs teacher)' },
+        { method: 'Ensemble of 4 specialist models', size: '3.0M params', accuracy: '43.5% accuracy (−30.0 pt vs teacher)' },
       ],
-      note: "Standard logit matching barely helps here, +0.7 points over training the student alone, because it only supervises the final output, which the student can already approximate on its own. Matching intermediate features instead gives the student a richer signal about how to represent the problem, not just what answer to produce, and that closed nearly a third of the gap to the teacher using a student with fewer parameters, not more. The ensemble traded accuracy for the smallest model by far, under a tenth the parameters of the independent student, which is the right call only when parameter count is the binding constraint and not accuracy: splitting the feature space across separate students loses the cross-feature dependencies a single model captures naturally.",
+      note: "Copying the teacher's answers barely helped, just 0.7 points over training the smaller model alone, because it could already guess the final answer on its own without much help. Copying how the teacher actually represents the problem helped far more, closing nearly a third of the gap to the teacher using a smaller model, not a bigger one. The ensemble of specialists traded accuracy for size, ending up under a tenth the parameters of the independently trained student, and that trade is worth making only when size is the real constraint, not accuracy: splitting the problem across separate models loses connections between parts that a single model naturally keeps.",
       repo: 'https://github.com/ha405/Knowledge-Distillation',
     },
   ],
@@ -823,9 +823,9 @@ function CaseStudiesPage() {
         <span className="section-index">Case studies</span>
         <h1 className="page-title">Three ways to shrink a model, and where each one breaks</h1>
         <p className="section-deck">
-          Quantization, pruning, and distillation, each run against its own real baseline. Every
-          number here traces back to notebook execution output or profiler source, not a
-          README's prose.
+          Three techniques for making a model smaller and faster, each tested against its own
+          real starting point. Every number here can be checked against the code behind it, not
+          just the write-up.
         </p>
       </header>
 

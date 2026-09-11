@@ -206,8 +206,10 @@ const DATA = {
 
   caseStudies: [
     {
-      tag: 'Case study',
+      id: 'quantization',
+      tag: 'Quantization',
       title: 'How much can a model shrink before something breaks?',
+      takeaway: 'At 4-bit, K-means clustering held 11 points of accuracy; fixed-point quantization lost 26, on the same model and data.',
       objective:
         'Every model earmarked for production carries a hidden question: how much of its size is load-bearing, and how much is margin nobody has actually tested? Two compression methods can promise a similar footprint and land in completely different places on accuracy, and the only way to find out which is which is to run both against the same baseline and see exactly where each one breaks.',
       approach: [
@@ -225,8 +227,10 @@ const DATA = {
       repo: 'https://github.com/ha405/Quantization',
     },
     {
-      tag: 'Case study',
+      id: 'pruning',
+      tag: 'Pruning',
       title: 'What pruning actually costs before it pays off',
+      takeaway: 'Removing 81% of the channels collapses accuracy to 13% before 40 epochs of fine-tuning bring it to 88%.',
       objective:
         "Removing structure from a trained network sounds like a clean way to cut inference cost: fewer channels, fewer computations, a smaller file. That framing skips the part in between, the moment right after the structure is gone and before anything has been retrained to live without it.",
       approach: [
@@ -242,8 +246,10 @@ const DATA = {
       repo: 'https://github.com/ha405/Pruning',
     },
     {
-      tag: 'Case study',
+      id: 'distillation',
+      tag: 'Distillation',
       title: 'When a smaller model can out-learn training it alone',
+      takeaway: "Matching a teacher's features beat matching its output, and did it with a smaller student either way.",
       objective:
         "A small model trained on its own and the same small model trained under supervision from a larger one can land in very different places, even with identical architecture, data, and compute budget. The question worth answering before picking a deployment-sized model is how much of that gap is recoverable, and which form of supervision actually recovers it.",
       approach: [
@@ -750,7 +756,7 @@ function Projects() {
    one once a second project has real published numbers. */
 function CaseStudyEntry({ c }) {
   return (
-    <article className="study">
+    <article className="study" id={c.id}>
       <div className="study-head">
         <span className="mono-sm">{c.tag}</span>
         <h2 className="study-title">{c.title}</h2>
@@ -815,15 +821,29 @@ function CaseStudiesPage() {
       </RouteLink>
       <header className="page-head">
         <span className="section-index">Case studies</span>
-        <h1 className="page-title">Real work, real numbers</h1>
+        <h1 className="page-title">Three ways to shrink a model, and where each one breaks</h1>
         <p className="section-deck">
-          Deep dives on specific projects: the constraint, the method, and results checked
-          against the code, not just claimed.
+          Quantization, pruning, and distillation, each run against its own real baseline. Every
+          number here traces back to notebook execution output or profiler source, not a
+          README's prose.
         </p>
       </header>
+
+      <nav className="study-contents" aria-label="Case studies on this page">
+        {DATA.caseStudies.map((c, i) => (
+          <a className="study-contents-item" href={`#${c.id}`} key={c.id}>
+            <span className="study-contents-num">{String(i + 1).padStart(2, '0')}</span>
+            <span className="study-contents-body">
+              <span className="study-contents-tag">{c.tag}</span>
+              <span className="study-contents-takeaway">{c.takeaway}</span>
+            </span>
+          </a>
+        ))}
+      </nav>
+
       <div className="study-list">
         {DATA.caseStudies.map((c) => (
-          <CaseStudyEntry c={c} key={c.title} />
+          <CaseStudyEntry c={c} key={c.id} />
         ))}
       </div>
     </div>

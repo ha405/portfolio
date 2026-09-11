@@ -224,6 +224,42 @@ const DATA = {
       note: "At 8-bit, method barely matters: both hold within 0.2 points of the uncompressed baseline. At 4-bit they split hard, an 11-point drop for clustering against a 26-point drop for fixed-point quantization on the identical model and data, because clustering adapts to the weight distribution and fixed-point quantization doesn't. Two caveats worth stating plainly: on-disk size barely moved between 8-bit and 4-bit, since naive tensor serialization doesn't pack sub-byte values without custom bit-packing, so the realized compression here is roughly 4x against a theoretical ceiling closer to 8x. And nothing in this table ran faster than the FP32 baseline, since simulated low-bit weights still get dequantized to FP32 before every forward pass without a runtime built for low-bit compute — a real deployment win needs an export step (ONNX or TensorRT) on top of this, not instead of it. Structured pruning was tested too, as a further axis with its own overhead; the complete matrix is in the repository below.",
       repo: 'https://github.com/ha405/Quantization',
     },
+    {
+      tag: 'Case study',
+      title: 'What pruning actually costs before it pays off',
+      objective:
+        "Removing structure from a trained network sounds like a clean way to cut inference cost: fewer channels, fewer computations, a smaller file. That framing skips the part in between, the moment right after the structure is gone and before anything has been retrained to live without it.",
+      approach: [
+        "The method: rank each layer's channels by how much they actually contribute to the output, not just by weight magnitude, remove the lowest-contributing ones down to a target sparsity, and measure accuracy immediately, before any recovery training. Only after that number is on record does fine-tuning start, so the real cost of the pruning step stays visible instead of hidden behind a recovery phase that happens automatically in most write-ups.",
+        "For this run: a VGG16-BN classifier (chenyaofo/pytorch-cifar-models) on CIFAR-10, with channels ranked by saliency and removed structurally down to roughly 81% sparsity, then fine-tuned for 40 epochs.",
+      ],
+      baseline: { label: 'FP32 baseline', size: '58.25 MB', latency: '13.82 ms' },
+      results: [
+        { method: 'Immediately after pruning (81% sparsity)', size: '11.14 MB', accuracy: '13.1% top-1 (−80.6 pt)' },
+        { method: 'After 40 epochs of fine-tuning', size: '11.14 MB', accuracy: '88.0% top-1 (−5.6 pt)' },
+      ],
+      note: "The number worth remembering isn't the final 88.0%, it's the 13.1% in between: removing 81% of the channels destroys the model outright, and every point of the final accuracy came back through 40 epochs of fine-tuning, not from the pruning step itself. Budget for that recovery phase as real project cost, not a footnote. The same pattern held on CIFAR-100 (1.0% immediately after pruning, 64.4% after recovery, against a 74.0% baseline). One thing this technique does that quantization above doesn't: latency actually dropped, from 13.82 ms to 8.34 ms, because removing channels cuts real computation (MACs fell from 314M to 41.78M) regardless of what runtime executes it. Quantization only pays off once the runtime has low-bit compute kernels to exploit.",
+      repo: 'https://github.com/ha405/Pruning',
+    },
+    {
+      tag: 'Case study',
+      title: 'When a smaller model can out-learn training it alone',
+      objective:
+        "A small model trained on its own and the same small model trained under supervision from a larger one can land in very different places, even with identical architecture, data, and compute budget. The question worth answering before picking a deployment-sized model is how much of that gap is recoverable, and which form of supervision actually recovers it.",
+      approach: [
+        "The method: train the same small student architecture multiple ways against the same larger teacher and the same held-out test set, so the comparison isolates the supervision method rather than the architecture. Matching the teacher's final output distribution is the simplest form of supervision; matching its intermediate feature representations is a stronger, harder-to-implement one; splitting the problem across several smaller specialist models is a third strategy aimed at parameter count rather than accuracy.",
+        "For this run: a VGG16-BN teacher (73.5% top-1 on CIFAR-100) supervising a VGG11-BN student, compared against the same student trained independently with no teacher at all, a feature-distilled version of the same student, and an ensemble of four smaller specialist students trained on partitions of the teacher's feature space.",
+      ],
+      baseline: { label: 'Teacher — VGG16-BN', size: '33.6M params', latency: '73.5% top-1' },
+      results: [
+        { method: 'Independent student (no teacher)', size: '28.5M params', accuracy: '48.0% top-1 (−25.5 pt vs teacher)' },
+        { method: 'Logit matching (standard KD)', size: '28.5M params', accuracy: '48.7% top-1 (−24.8 pt vs teacher)' },
+        { method: 'Feature distillation (hints + KD)', size: '9.2M params', accuracy: '56.8% top-1 (−16.7 pt vs teacher)' },
+        { method: 'Ensemble of 4 specialist students', size: '3.0M params', accuracy: '43.5% top-1 (−30.0 pt vs teacher)' },
+      ],
+      note: "Standard logit matching barely helps here, +0.7 points over training the student alone, because it only supervises the final output, which the student can already approximate on its own. Matching intermediate features instead gives the student a richer signal about how to represent the problem, not just what answer to produce, and that closed nearly a third of the gap to the teacher using a student with fewer parameters, not more. The ensemble traded accuracy for the smallest model by far, under a tenth the parameters of the independent student, which is the right call only when parameter count is the binding constraint and not accuracy: splitting the feature space across separate students loses the cross-feature dependencies a single model captures naturally.",
+      repo: 'https://github.com/ha405/Knowledge-Distillation',
+    },
   ],
 
   research: [
@@ -738,19 +774,30 @@ function CaseStudyEntry({ c }) {
           </a>
         </div>
 
-        <div className="study-table">
-          <div className="study-row study-row--baseline">
-            <span className="study-method">{c.baseline.label}</span>
-            <span className="study-metric">{c.baseline.size}</span>
-            <span className="study-metric">{c.baseline.latency}</span>
-          </div>
-          {c.results.map((r) => (
-            <div className="study-row" key={r.method}>
-              <span className="study-method">{r.method}</span>
-              <span className="study-metric study-metric--accent">{r.size}</span>
-              <span className="study-accuracy">{r.accuracy}</span>
-            </div>
-          ))}
+        <div className="study-table-wrap">
+          <table className="study-table">
+            <thead>
+              <tr className="study-row study-row--head">
+                <th scope="col">Configuration</th>
+                <th scope="col">Size</th>
+                <th scope="col">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="study-row study-row--baseline">
+                <td className="study-method">{c.baseline.label}</td>
+                <td className="study-metric">{c.baseline.size}</td>
+                <td className="study-metric">{c.baseline.latency}</td>
+              </tr>
+              {c.results.map((r) => (
+                <tr className="study-row" key={r.method}>
+                  <td className="study-method">{r.method}</td>
+                  <td className="study-metric study-metric--accent">{r.size}</td>
+                  <td className="study-accuracy">{r.accuracy}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
       <p className="study-note">{c.note}</p>

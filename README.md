@@ -1,51 +1,37 @@
-# Portfolio
+# Muhammad Haseeb — Portfolio
 
-Personal site for Muhammad Haseeb — machine learning engineer.
-Built with React 19 + Vite, deployed to GitHub Pages.
+A technical portfolio built with React 19 and Vite. Locally served IBM Plex Sans, a single-column page, open project rows, and restrained separators keep the emphasis on readable content.
 
 ## Development
 
-```bash
+```sh
 npm install
-npm run dev      # http://localhost:5173/portfolio/
+npm run dev
 npm run lint
-npm run build    # also copies dist/index.html to dist/404.html, see below
-npm run deploy   # builds, then publishes dist/ via gh-pages
+npm run build
 ```
 
-## Structure
+The site is served at `/portfolio/`. The build also creates `dist/404.html` for GitHub Pages deep links. `npm run deploy` publishes the build; deployment is a separate action.
 
-- `src/App.jsx` — all content lives in the `DATA` object at the top of the file;
-  the components below it are presentational. Edit `DATA` to update the site.
-  `DATA.services` drives "What I do", `DATA.caseStudies` drives the case
-  studies page, and `DATA.availability` drives the status line in the rail.
-- `src/App.css` — the whole design system. Tokens are defined once on `:root`
-  and re-declared under `[data-theme='dark']`; nothing below uses a raw color.
-- `index.html` — fonts, metadata, and the inline script that applies the
-  stored theme before first paint.
+## Editing content
 
-## Routing
+- `src/content.js`: experimental case studies, project descriptions, expertise, and work history.
+- `src/App.jsx`: homepage copy, services, contact form, and page components.
+- `src/App.css`: colors, typography, layouts, responsive rules, and reduced-motion support.
+- `index.html`: metadata. `src/main.jsx` imports the Latin subset of IBM Plex Sans from Fontsource; no third-party font requests are needed at runtime.
 
-The site has exactly two routes, handled with a ~30-line hand-rolled router
-in `App.jsx` (`usePathname`, `navigateTo`, `RouteLink`) rather than a router
-dependency:
+The homepage contains selected projects, technical case studies, expertise, experience, and contact. `/portfolio/case-studies/` contains three studies with independently linkable anchors: `#pruning`, `#quantization`, and `#distillation`. Navigation uses ordinary links, including browser back/forward and new-tab support.
 
-- `/` — the main scroll: Hero, Services, Experience, Projects, Research,
-  About, Contact.
-- `/case-studies` — a dedicated page, linked from the rail, not part of the
-  home scroll. Each entry in `DATA.caseStudies` renders as its own section.
+Four projects appear as open rows, followed by an additional project link. A native disclosure keeps the contact form keyboard-accessible without adding visual clutter.
 
-Because GitHub Pages has no server-side routing, `npm run build` runs a
-`postbuild` step that copies `dist/index.html` to `dist/404.html`. That's
-what lets a direct link or a refresh on `/portfolio/case-studies` work: GH
-Pages serves `404.html` for any unmatched path, and since it's the same app
-shell, the client router just reads the URL and renders the right page.
+Typography and structure were informed by direct inspection of [Paco Coursey](https://paco.me/), [Guillermo Rauch](https://rauchg.com/), and [Lee Robinson](https://leerob.com/): restrained type scales, concise project descriptions, and clear content categories. The implementation and content remain specific to this portfolio.
 
-## Notes
+## Content integrity
 
-- Every number in `DATA.caseStudies` is sourced from a real repository —
-  primary sources (notebook cell outputs, `profiler.py`), not summaries.
-  Before adding another one, verify claims against the actual code, not a
-  README's prose, since those have been known to diverge.
-- The contact form posts to Formspree (`src/App.jsx`, `ContactForm`).
-- `vite.config.js` sets `base: "/portfolio/"` to match the GitHub Pages path.
+The studies are independent experiments, not client engagements. Measurements were preserved from the previous portfolio records and were not newly reproduced during the redesign. Keep the qualifications alongside the numbers. Before adding or updating a claim, check the underlying experiment outputs, model, dataset, and runtime.
+
+The distillation configurations use different architectures; the copy deliberately does not attribute their entire accuracy difference to the training method. Quantization reduced recorded size but increased measured latency in these tests.
+
+## Contact
+
+The expandable brief form retains the existing Formspree endpoint, with validation, pending, success, and error states. The email link remains available independently. Test production delivery with an intentional enquiry before relying on the form for incoming leads.

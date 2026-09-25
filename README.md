@@ -11,7 +11,7 @@ npm run lint
 npm run build
 ```
 
-The site is served at `/portfolio/`. The build also creates `dist/404.html` for GitHub Pages deep links. `npm run deploy` publishes the build; deployment is a separate action.
+The site is served at `/portfolio/`. The build creates a static entry page for `/portfolio/case-studies/` and `dist/404.html` for other GitHub Pages deep links. `npm run deploy` publishes the build; deployment is a separate action.
 
 ## Editing content
 

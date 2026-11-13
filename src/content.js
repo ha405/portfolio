@@ -45,22 +45,24 @@ export const studies = [
 ];
 
 export const projects = [
-  { name: 'Code search with MCP', category: 'Developer tools', description: 'An MCP server that lets language models search a repository and retrieve relevant code. Includes documentation generation with Gemini.', stack: 'Node.js · JSON-RPC · MCP · Gemini', url: 'https://github.com/ha405/Model-Context-Protocol' },
-  { name: 'FullStackAgent', category: 'AI agents', description: 'Frontend and backend agents that share a workspace to build web applications. Supports project scaffolding, Figma designs, and parallel tasks.', stack: 'TypeScript · Google ADK · Figma MCP', url: 'https://github.com/ha405/FullStackAgent' },
+  { name: 'Autonomous Development Agent', category: 'AI developer tools', description: 'Agents that turn prompts and Figma designs into full-stack code, REST APIs, and deployment configuration.', stack: 'TypeScript · Google ADK · MCP', url: 'https://github.com/ha405/FullStackAgent' },
+  { name: 'Semantic Code Search', category: 'Developer tools', description: 'A GitHub MCP server for repository search and code retrieval, with a natural-language interface for investigating bugs.', stack: 'Node.js · JSON-RPC · MCP', url: 'https://github.com/ha405/Model-Context-Protocol' },
+  { name: 'Multi-Agent ML Platform', category: 'Applied AI', description: 'A full-stack platform that runs data analysis and model-training workflows from uploaded datasets and natural-language goals.', stack: 'Python · Flask · React · Docker', url: 'https://github.com/ha405/AutoML' },
   { name: 'Diffusion transformer quantization', category: 'Model compression', description: 'Post-training quantization using 4-bit weights and 8-bit activations. Adjusts scaling across diffusion timesteps and calibrates individual transformer blocks.', stack: 'PyTorch · Diffusers · W4A8', url: 'https://github.com/ha405/AI624-Diffusion_Quantization' },
-  { name: 'AutoML agents', category: 'ML tools', description: 'Agents for planning experiments, training models, and plotting results. Model training runs in Docker containers.', stack: 'Python · Flask · React · Docker', url: 'https://github.com/ha405/AutoML' },
   { name: 'Urdu news classification', category: 'Natural language processing', description: 'A comparison of classical and neural classifiers for Urdu news, with text normalization and diacritic removal before training.', stack: 'UrduHack · scikit-learn · PyTorch', url: 'https://github.com/ha405/Urdu-News-Classification-with-ML' },
 ];
 
 export const experience = [
-  { company: 'NEXA', role: 'Founding Software Engineer · Team Lead', period: 'May 2026 — present', description: 'Lead product engineering across backend architecture, frontend development, and AI integration.' },
-  { company: 'LUMS / UIUC', role: 'Research Engineer', period: 'Jan 2025 — present', description: 'Research model pruning, diffusion model quantization, and federated learning when data distributions differ across clients.' },
-  { company: 'DatacurveAI', role: 'OSS Engineer', period: 'Dec 2025 — Mar 2026', description: 'Contributed features and fixes to open-source ML repositories and filtered training data for coding tasks.' },
-  { company: 'Innova Tech', role: 'Machine Learning Engineer', period: 'Jul — Oct 2025', description: 'Worked on INT8 quantization of SmolVLM with ONNX and TensorRT, CNN training, and automated annotation pipelines.' },
+  { company: 'NEXA · UK, remote', role: 'Founding Product Engineer', period: 'May — Nov 2026', description: 'Shipped a production AI copilot with typed agent tools and streamed responses. Built queue-backed CV processing with per-candidate status, calendar-based interview scheduling, and a candidate sourcing and outreach dashboard.' },
+  { company: 'DuneScout · UAE, remote', role: 'Founding Software Engineer', period: 'Mar — May 2026', description: 'Built web scrapers, an asynchronous data ingestion pipeline, backend APIs, and a frontend analytics dashboard.' },
+  { company: 'DatacurveAI · YC S24', role: 'Open Source Software Engineer', period: 'Nov 2025 — Mar 2026', description: 'Implemented features in open-source ML repositories and authored coding tasks for training and evaluating code-generation models.' },
+  { company: 'Innova Tech', role: 'Machine Learning Engineer', period: 'Jan — Oct 2025', description: 'Automated preprocessing and annotation, improving classifier accuracy by 4%. Optimized inference with ONNX and TensorRT, reducing model memory usage by 40%.' },
+  { company: 'University of Illinois Urbana-Champaign', role: 'AI Research Engineer', period: 'May — Aug 2025', description: 'Built AI-assisted tooling to exclude selected legacy C code at compile time and an LLM agent for large C-to-Rust codebase migrations.' },
+  { company: 'LUMS · CITY Lab and Computer Vision Lab', role: 'ML Research Engineer', period: 'Jan 2025 — May 2026', description: 'Researched model compression, 4-bit diffusion quantization, federated learning under imbalanced data, and single-image camera calibration.' },
 ];
 
 export const expertise = [
-  { title: 'Web applications', description: 'Build frontend interfaces, backend APIs, and internal tools, or add features to an existing application.' },
-  { title: 'AI integration', description: 'Add document search, code retrieval, or model tools to an application, with evaluation suited to the task.' },
-  { title: 'Model optimization', description: 'Evaluate pruning, quantization, and distillation against your accuracy, latency, and memory requirements.' },
+  { title: 'Product engineering', description: 'Build user-facing applications, backend APIs, and the systems that connect them.' },
+  { title: 'Applied AI', description: 'Integrate agent tools, retrieval, and streaming interfaces into real product workflows.' },
+  { title: 'ML efficiency', description: 'Evaluate pruning and quantization against accuracy, memory, and latency requirements.' },
 ];

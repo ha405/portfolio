@@ -7,22 +7,20 @@ const BASE = import.meta.env.BASE_URL;
 const STUDIES_PATH = `${BASE}case-studies/`;
 const EMAIL = 'haseeb099m@gmail.com';
 
-function Navigation({ isStudies }) {
+function Navigation() {
   return (
     <header className="site-header">
       <a className="brand" href={BASE}>
         <span className="brand-mark">H</span>
         <span className="brand-text">
           Muhammad Haseeb
-          <small>Software & ML Engineer</small>
+          <small>AI & Backend Engineer</small>
         </span>
       </a>
 
       <nav className="main-nav" aria-label="Main navigation">
         <a href={`${BASE}#work`}>Work</a>
-        <a href={STUDIES_PATH} aria-current={isStudies ? 'page' : undefined}>
-          Case studies
-        </a>
+        <a href={`${BASE}#experience`}>Experience</a>
         <a href={`${BASE}#contact`}>Contact</a>
       </nav>
     </header>
@@ -50,19 +48,19 @@ function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-grid" aria-hidden="true" />
         <p className="kicker">Muhammad Haseeb</p>
-        <h1 id="hero-title">Software engineer</h1>
+        <h1 id="hero-title">AI &amp; backend engineer</h1>
         <ul className="hero-focus" aria-label="Areas of work">
-          <li>Automation</li>
-          <li>Model compression</li>
-          <li>Inference optimization</li>
+          <li>Production AI</li>
+          <li>Backend systems</li>
+          <li>Efficient ML</li>
         </ul>
         <p className="hero-copy">
-          I help teams build software, automate repetitive work, and improve how ML models
-          run on their target hardware.
+          I build AI features and the backend systems behind them. My work spans agent
+          tools, asynchronous pipelines, and efficient machine learning.
         </p>
         <div className="hero-actions">
           <a className="button button-primary" href="#contact">
-            Discuss a project
+            Get in touch
             <ArrowUpRight size={17} aria-hidden="true" />
           </a>
           <a className="text-link" href="#work">
@@ -72,12 +70,12 @@ function Home() {
         </div>
         <dl className="hero-meta">
           <div>
-            <dt>Currently</dt>
-            <dd>Founding SWE · Team Lead at <strong>NEXA</strong></dd>
+            <dt>Most recently</dt>
+            <dd>Founding Product Engineer at <strong>NEXA</strong></dd>
           </div>
           <div>
             <dt>Available for</dt>
-            <dd><strong>Client projects</strong></dd>
+            <dd><strong>Full-time and contract roles</strong></dd>
           </div>
           <div>
             <dt>Based in</dt>
@@ -90,7 +88,7 @@ function Home() {
         id="work"
         index="01"
         title="Selected work"
-        note="Web applications, developer tools, and AI systems I’ve built."
+        note="AI systems, developer tools, and full-stack applications I’ve built."
       >
         <div className="project-list">
           {projects.slice(0, 4).map((project) => (
@@ -118,9 +116,33 @@ function Home() {
         </a>
       </PageSection>
 
+      <PageSection id="experience" index="02" title="Experience">
+        <div className="timeline">
+          {experience.map((item) => (
+            <article key={item.company}>
+              <div className="timeline-date">{item.period}</div>
+              <div className="timeline-body">
+                <h3>{item.role}</h3>
+                <p className="company">{item.company}</p>
+                <p>{item.description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <a
+          className="text-link research-link"
+          href="https://ha405.github.io/research.html"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Research and publications
+          <ArrowUpRight size={15} aria-hidden="true" />
+        </a>
+      </PageSection>
+
       <PageSection
         id="case-studies"
-        index="02"
+        index="03"
         title="Case studies"
         note="Experiments in pruning, quantization, and knowledge distillation."
       >
@@ -145,7 +167,7 @@ function Home() {
 
       <PageSection
         id="services"
-        index="03"
+        index="04"
         title="How I can help"
       >
         <div className="service-grid">
@@ -166,30 +188,6 @@ function Home() {
             The handover includes source code, setup instructions, and relevant test results.
           </p>
         </aside>
-      </PageSection>
-
-      <PageSection id="experience" index="04" title="Experience">
-        <div className="timeline">
-          {experience.map((item) => (
-            <article key={item.company}>
-              <div className="timeline-date">{item.period}</div>
-              <div className="timeline-body">
-                <h3>{item.role}</h3>
-                <p className="company">{item.company}</p>
-                <p>{item.description}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-        <a
-          className="text-link research-link"
-          href="https://ha405.github.io/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Research portfolio
-          <ArrowUpRight size={15} aria-hidden="true" />
-        </a>
       </PageSection>
 
       <Contact />
@@ -224,8 +222,8 @@ function Contact() {
         <div className="contact-lead">
           <h3>Let’s talk.</h3>
           <p>
-            Have a product to build or a feature to add? Tell me what you need, your current
-            stack, and your timeline. You can also get in touch about engineering roles.
+            I’m open to applied AI and backend engineering roles, as well as paid product
+            work. Tell me what you’re building and where I could help.
           </p>
           <a className="contact-email" href={`mailto:${EMAIL}`}>
             <Mail size={17} aria-hidden="true" />
@@ -442,7 +440,7 @@ function Footer() {
       </span>
       <div className="social-links">
         <a href="https://github.com/ha405" target="_blank" rel="noreferrer">GitHub</a>
-        <a href="https://linkedin.com/in/muhammad-haseeb" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="https://www.linkedin.com/in/muhammad-haseeb-4500b3246/" target="_blank" rel="noreferrer">LinkedIn</a>
         <a href="#main">Back to top ↑</a>
       </div>
     </footer>
@@ -455,10 +453,10 @@ export default function App() {
   useEffect(() => {
     document.title = isStudies
       ? 'Model Compression Case Studies | Muhammad Haseeb'
-      : 'Muhammad Haseeb | Software Engineer';
+      : 'Muhammad Haseeb | AI & Backend Engineer';
     const description = isStudies
       ? 'Experiments in pruning, quantization, and knowledge distillation by Muhammad Haseeb, with methods, results, and limitations.'
-      : 'Muhammad Haseeb is a software engineer working on automation, model compression, and inference optimization. Explore selected work and case studies.';
+      : 'Muhammad Haseeb builds production AI features, backend systems, and efficient ML. Explore selected projects, experience, and research.';
     document.querySelector('meta[name="description"]')?.setAttribute('content', description);
     const hash = window.location.hash.slice(1);
     if (hash) {
@@ -472,7 +470,7 @@ export default function App() {
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       <div className="site-shell">
-        <Navigation isStudies={isStudies} />
+        <Navigation />
         {isStudies ? <CaseStudies /> : <Home />}
         <Footer />
       </div>

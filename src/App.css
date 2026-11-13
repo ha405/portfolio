@@ -200,7 +200,7 @@ main {
   position: absolute;
   inset: 0;
   left: -var(--gutter);
-  right: -40%;
+  right: 0;
   background-image:
     linear-gradient(to right, var(--border-light) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border-light) 1px, transparent 1px);

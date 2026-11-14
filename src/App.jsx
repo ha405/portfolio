@@ -50,13 +50,13 @@ function Home() {
         <p className="kicker">Muhammad Haseeb</p>
         <h1 id="hero-title">AI &amp; backend engineer</h1>
         <ul className="hero-focus" aria-label="Areas of work">
-          <li>Production AI</li>
-          <li>Backend systems</li>
-          <li>Efficient ML</li>
+          <li>Agent workflows</li>
+          <li>Data pipelines</li>
+          <li>Model efficiency</li>
         </ul>
         <p className="hero-copy">
-          I build AI features and the backend systems behind them. My work spans agent
-          tools, asynchronous pipelines, and efficient machine learning.
+          I build production AI features end to end, from typed agent tools and streaming
+          interfaces to queue-backed processing and optimized inference.
         </p>
         <div className="hero-actions">
           <a className="button button-primary" href="#contact">

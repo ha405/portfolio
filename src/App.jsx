@@ -49,26 +49,51 @@ function Home() {
     <main id="main" className="main-column">
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-grid" aria-hidden="true" />
-        <p className="kicker">Muhammad Haseeb</p>
-        <h1 id="hero-title">AI &amp; ML engineer</h1>
-        <ul className="hero-focus" aria-label="Areas of work">
-          <li>Agent workflows</li>
-          <li>Data pipelines</li>
-          <li>Model efficiency</li>
-        </ul>
-        <p className="hero-copy">
-          I build production AI and ML systems end to end, from agent workflows and data
-          pipelines to model serving and edge inference.
-        </p>
-        <div className="hero-actions">
-          <a className="button button-primary" href="#contact">
-            Get in touch
-            <ArrowUpRight size={17} aria-hidden="true" />
-          </a>
-          <a className="text-link" href="#ml">
-            Explore ML work
-            <ArrowRight size={16} aria-hidden="true" />
-          </a>
+        <div className="hero-layout">
+          <div className="hero-intro">
+            <p className="kicker">Muhammad Haseeb</p>
+            <h1 id="hero-title">AI &amp; ML engineer</h1>
+            <ul className="hero-focus" aria-label="Areas of work">
+              <li>Agent workflows</li>
+              <li>Data pipelines</li>
+              <li>Model efficiency</li>
+            </ul>
+            <p className="hero-copy">
+              I build production AI and ML systems end to end, from agent workflows and data
+              pipelines to model serving and edge inference.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#work">
+                Explore my work
+                <ArrowRight size={17} aria-hidden="true" />
+              </a>
+              <a className="text-link" href="#contact">
+                Get in touch
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+          <nav className="hero-guide" aria-label="Explore the portfolio">
+            <p>Explore by focus</p>
+            <a href="#work">
+              <span>01</span>
+              <strong>Production AI</strong>
+              <small>Agents, APIs, and product workflows</small>
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+            <a href="#ml">
+              <span>02</span>
+              <strong>Applied ML</strong>
+              <small>Fine-tuning, inference, and deployment</small>
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+            <a href={STUDIES_PATH}>
+              <span>03</span>
+              <strong>Case studies</strong>
+              <small>Methods, results, and limitations</small>
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+          </nav>
         </div>
         <dl className="hero-meta">
           <div>

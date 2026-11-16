@@ -193,8 +193,18 @@ main {
 /* ── Hero ──────────────────────────────────────────────────────── */
 .hero {
   position: relative;
-  padding: clamp(64px, 10vw, 112px) 0 clamp(56px, 8vw, 88px);
-  max-width: 780px;
+  padding: clamp(42px, 6vw, 68px) 0 clamp(36px, 5vw, 52px);
+}
+
+.hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(250px, 0.85fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 76px);
+}
+
+.hero-intro {
+  min-width: 0;
 }
 
 .hero-grid {
@@ -219,7 +229,7 @@ main {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--accent-text);
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 
 h1 {
@@ -241,7 +251,7 @@ h1 span {
   flex-wrap: wrap;
   gap: 8px 14px;
   list-style: none;
-  margin: 26px 0 0;
+  margin: 18px 0 0;
   padding: 0;
   color: var(--ink-secondary);
   font-size: clamp(16px, 1.9vw, 18px);
@@ -255,7 +265,7 @@ h1 span {
 
 .hero-copy {
   max-width: 590px;
-  margin-top: 28px;
+  margin-top: 22px;
   color: var(--ink-secondary);
   font-size: clamp(17px, 2vw, 19px);
   line-height: 1.7;
@@ -266,7 +276,67 @@ h1 span {
   align-items: center;
   flex-wrap: wrap;
   gap: 24px;
-  margin-top: 36px;
+  margin-top: 24px;
+}
+
+.hero-guide {
+  min-width: 0;
+  padding: 20px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-guide > p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 8px;
+}
+
+.hero-guide a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0 12px;
+  padding: 15px 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.hero-guide a:hover strong,
+.hero-guide a:hover svg {
+  color: var(--accent-text);
+}
+
+.hero-guide a > span {
+  grid-row: span 2;
+  padding-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+.hero-guide strong {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.hero-guide small {
+  grid-column: 2 / 4;
+  margin-top: 4px;
+  color: var(--ink-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.hero-guide svg {
+  grid-column: 3;
+  grid-row: 1;
+  color: var(--ink-muted);
 }
 
 .button {
@@ -315,8 +385,8 @@ h1 span {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
-  margin-top: 56px;
-  padding-top: 28px;
+  margin-top: 38px;
+  padding-top: 20px;
   border-top: 1px solid var(--border);
 }
 
@@ -347,7 +417,7 @@ h1 span {
 
 /* ── Sections ─────────────────────────────────────────────────── */
 .page-section {
-  padding: clamp(48px, 7vw, 72px) 0;
+  padding: clamp(38px, 5vw, 56px) 0;
   border-top: 1px solid var(--border);
 }
 
@@ -356,7 +426,7 @@ h1 span {
   grid-template-columns: auto 1fr;
   gap: 20px 32px;
   align-items: start;
-  margin-bottom: clamp(28px, 4vw, 44px);
+  margin-bottom: clamp(22px, 3vw, 32px);
 }
 
 .section-index {
@@ -1340,6 +1410,21 @@ td:first-child {
 
 /* ── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 820px) {
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hero-guide {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 18px;
+  }
+
+  .hero-guide > p {
+    grid-column: 1 / -1;
+  }
+
   .site-header {
     flex-direction: column;
     align-items: flex-start;
@@ -1418,6 +1503,19 @@ td:first-child {
 }
 
 @media (max-width: 720px) {
+  .hero-guide {
+    display: none;
+  }
+
+  .hero-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+  }
+
+  .hero-meta div:last-child {
+    grid-column: 1 / -1;
+  }
+
   .brand-text {
     font-size: 14px;
   }

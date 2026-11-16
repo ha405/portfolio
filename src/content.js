@@ -45,24 +45,31 @@ export const studies = [
 ];
 
 export const projects = [
-  { name: 'Autonomous Development Agent', category: 'AI developer tools', description: 'Agents that turn prompts and Figma designs into full-stack code, REST APIs, and deployment configuration.', stack: 'TypeScript · Google ADK · MCP', url: 'https://github.com/ha405/FullStackAgent' },
-  { name: 'Semantic Code Search', category: 'Developer tools', description: 'A GitHub MCP server for repository search and code retrieval, with a natural-language interface for investigating bugs.', stack: 'Node.js · JSON-RPC · MCP', url: 'https://github.com/ha405/Model-Context-Protocol' },
   { name: 'Multi-Agent ML Platform', category: 'Applied AI', description: 'A full-stack platform that runs data analysis and model-training workflows from uploaded datasets and natural-language goals.', stack: 'Python · Flask · React · Docker', url: 'https://github.com/ha405/AutoML' },
+  { name: 'Autonomous Development Agent', category: 'AI developer tools', description: 'Agents that turn prompts and Figma designs into full-stack code, REST APIs, and deployment configuration.', stack: 'TypeScript · Google ADK · MCP', url: 'https://github.com/ha405/FullStackAgent' },
   { name: 'Diffusion transformer quantization', category: 'Model compression', description: 'Post-training quantization using 4-bit weights and 8-bit activations. Adjusts scaling across diffusion timesteps and calibrates individual transformer blocks.', stack: 'PyTorch · Diffusers · W4A8', url: 'https://github.com/ha405/AI624-Diffusion_Quantization' },
+  { name: 'Semantic Code Search', category: 'Developer tools', description: 'A GitHub MCP server for repository search and code retrieval, with a natural-language interface for investigating bugs.', stack: 'Node.js · JSON-RPC · MCP', url: 'https://github.com/ha405/Model-Context-Protocol' },
   { name: 'Urdu news classification', category: 'Natural language processing', description: 'A comparison of classical and neural classifiers for Urdu news, with text normalization and diacritic removal before training.', stack: 'UrduHack · scikit-learn · PyTorch', url: 'https://github.com/ha405/Urdu-News-Classification-with-ML' },
 ];
 
+export const mlWork = [
+  { metric: '40% less memory', title: 'Production inference', description: 'Optimized model execution with ONNX and TensorRT, then deployed and stress-tested cloud inference services.', detail: 'Innova Tech · ONNX · TensorRT' },
+  { metric: 'LoRA', title: 'Fine-tuning and evaluation', description: 'Fine-tuned LLMs across multiple domains and analyzed how attention heads contributed to changes in generated responses.', detail: 'LUMS · PyTorch · Transformers' },
+  { metric: 'Up to 99% compression', title: 'Model efficiency', description: 'Aligned compressed ViTs and LLMs with reference checkpoints while preserving baseline performance; also developed 4-bit diffusion quantization.', detail: 'LUMS · Pruning · Quantization' },
+  { metric: 'Jetson Nano', title: 'Edge inference', description: 'Quantized LLMs with GPTQ and deployed TensorRT-optimized inference for constrained edge hardware.', detail: 'LUMS · GPTQ · TensorRT' },
+];
+
 export const experience = [
-  { company: 'NEXA · UK, remote', role: 'Founding Product Engineer', period: 'May — Nov 2026', description: 'Shipped a production AI copilot with typed agent tools and streamed responses. Built queue-backed CV processing with per-candidate status, calendar-based interview scheduling, and a candidate sourcing and outreach dashboard.' },
+  { company: 'NEXA · UK, remote', role: 'Founding Product Engineer', period: 'May — Nov 2026', description: 'Shipped a production AI copilot with typed agent tools and streamed responses. Built queue-backed CV processing, interview scheduling, and candidate sourcing workflows. Defined an agent-assisted development framework for the engineering team.' },
   { company: 'DuneScout · UAE, remote', role: 'Founding Software Engineer', period: 'Mar — May 2026', description: 'Built web scrapers, an asynchronous data ingestion pipeline, backend APIs, and a frontend analytics dashboard.' },
   { company: 'DatacurveAI · YC S24', role: 'Open Source Software Engineer', period: 'Nov 2025 — Mar 2026', description: 'Implemented features in open-source ML repositories and authored coding tasks for training and evaluating code-generation models.' },
-  { company: 'Innova Tech', role: 'Machine Learning Engineer', period: 'Jan — Oct 2025', description: 'Automated preprocessing and annotation, improving classifier accuracy by 4%. Optimized inference with ONNX and TensorRT, reducing model memory usage by 40%.' },
+  { company: 'Innova Tech', role: 'Machine Learning Engineer', period: 'Jan — Oct 2025', description: 'Improved production classifier accuracy by 4% through preprocessing and annotation. Optimized inference with ONNX and TensorRT, cutting memory use by 40%; deployed, profiled, and stress-tested cloud model services.' },
   { company: 'University of Illinois Urbana-Champaign', role: 'AI Research Engineer', period: 'May — Aug 2025', description: 'Built AI-assisted tooling to exclude selected legacy C code at compile time and an LLM agent for large C-to-Rust codebase migrations.' },
-  { company: 'LUMS · CITY Lab and Computer Vision Lab', role: 'ML Research Engineer', period: 'Jan 2025 — May 2026', description: 'Researched model compression, 4-bit diffusion quantization, federated learning under imbalanced data, and single-image camera calibration.' },
+  { company: 'LUMS · CITY Lab and Computer Vision Lab', role: 'ML Research Engineer', period: 'Jan 2025 — May 2026', description: 'Compressed ViTs and LLMs while preserving baseline performance at up to 99% compression. Developed 4-bit diffusion quantization, LoRA fine-tuning studies, and GPTQ-based edge inference on Jetson Nano.' },
 ];
 
 export const expertise = [
   { title: 'Product engineering', description: 'Build user-facing applications, backend APIs, and the systems that connect them.' },
   { title: 'Applied AI', description: 'Integrate agent tools, retrieval, and streaming interfaces into real product workflows.' },
-  { title: 'ML efficiency', description: 'Evaluate pruning and quantization against accuracy, memory, and latency requirements.' },
+  { title: 'ML deployment', description: 'Fine-tune and optimize models, then evaluate inference against accuracy, memory, and latency requirements.' },
 ];

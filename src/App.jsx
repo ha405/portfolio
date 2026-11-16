@@ -1,25 +1,27 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Mail } from 'lucide-react';
-import { studies, projects, experience, expertise } from './content';
+import { studies, projects, mlWork, experience, expertise } from './content';
 import './App.css';
 
 const BASE = import.meta.env.BASE_URL;
 const STUDIES_PATH = `${BASE}case-studies/`;
 const EMAIL = 'haseeb099m@gmail.com';
 
-function Navigation() {
+function Navigation({ isStudies }) {
   return (
     <header className="site-header">
       <a className="brand" href={BASE}>
         <span className="brand-mark">H</span>
         <span className="brand-text">
           Muhammad Haseeb
-          <small>AI & Backend Engineer</small>
+          <small>AI, Backend &amp; ML Engineer</small>
         </span>
       </a>
 
       <nav className="main-nav" aria-label="Main navigation">
         <a href={`${BASE}#work`}>Work</a>
+        <a href={`${BASE}#ml`}>ML</a>
+        <a href={STUDIES_PATH} aria-current={isStudies ? 'page' : undefined}>Case studies</a>
         <a href={`${BASE}#experience`}>Experience</a>
         <a href={`${BASE}#contact`}>Contact</a>
       </nav>
@@ -48,23 +50,23 @@ function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-grid" aria-hidden="true" />
         <p className="kicker">Muhammad Haseeb</p>
-        <h1 id="hero-title">AI &amp; backend engineer</h1>
+        <h1 id="hero-title">AI &amp; ML engineer</h1>
         <ul className="hero-focus" aria-label="Areas of work">
           <li>Agent workflows</li>
           <li>Data pipelines</li>
           <li>Model efficiency</li>
         </ul>
         <p className="hero-copy">
-          I build production AI features end to end, from typed agent tools and streaming
-          interfaces to queue-backed processing and optimized inference.
+          I build production AI and ML systems end to end, from agent workflows and data
+          pipelines to model serving and edge inference.
         </p>
         <div className="hero-actions">
           <a className="button button-primary" href="#contact">
             Get in touch
             <ArrowUpRight size={17} aria-hidden="true" />
           </a>
-          <a className="text-link" href="#work">
-            See my work
+          <a className="text-link" href="#ml">
+            Explore ML work
             <ArrowRight size={16} aria-hidden="true" />
           </a>
         </div>
@@ -116,7 +118,29 @@ function Home() {
         </a>
       </PageSection>
 
-      <PageSection id="experience" index="02" title="Experience">
+      <PageSection
+        id="ml"
+        index="02"
+        title="Machine learning"
+        note="Fine-tuning, compression, and inference under real deployment constraints."
+      >
+        <div className="ml-grid">
+          {mlWork.map((item) => (
+            <article className="ml-card" key={item.title}>
+              <span className="ml-metric">{item.metric}</span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <small>{item.detail}</small>
+            </article>
+          ))}
+        </div>
+        <a className="text-link ml-study-link" href={STUDIES_PATH}>
+          Explore model compression case studies
+          <ArrowRight size={16} aria-hidden="true" />
+        </a>
+      </PageSection>
+
+      <PageSection id="experience" index="03" title="Experience">
         <div className="timeline">
           {experience.map((item) => (
             <article key={item.company}>
@@ -142,7 +166,7 @@ function Home() {
 
       <PageSection
         id="case-studies"
-        index="03"
+        index="04"
         title="Case studies"
         note="Experiments in pruning, quantization, and knowledge distillation."
       >
@@ -167,7 +191,7 @@ function Home() {
 
       <PageSection
         id="services"
-        index="04"
+        index="05"
         title="How I can help"
       >
         <div className="service-grid">
@@ -217,12 +241,12 @@ function Contact() {
   }
 
   return (
-    <PageSection id="contact" index="05" title="Contact" className="contact-section">
+    <PageSection id="contact" index="06" title="Contact" className="contact-section">
       <div className="contact-layout">
         <div className="contact-lead">
           <h3>Let’s talk.</h3>
           <p>
-            I’m open to applied AI and backend engineering roles, as well as paid product
+            I’m open to ML, applied AI, and backend engineering roles, as well as paid product
             work. Tell me what you’re building and where I could help.
           </p>
           <a className="contact-email" href={`mailto:${EMAIL}`}>
@@ -453,10 +477,10 @@ export default function App() {
   useEffect(() => {
     document.title = isStudies
       ? 'Model Compression Case Studies | Muhammad Haseeb'
-      : 'Muhammad Haseeb | AI & Backend Engineer';
+      : 'Muhammad Haseeb | AI, Backend & ML Engineer';
     const description = isStudies
       ? 'Experiments in pruning, quantization, and knowledge distillation by Muhammad Haseeb, with methods, results, and limitations.'
-      : 'Muhammad Haseeb builds production AI features, backend systems, and efficient ML. Explore selected projects, experience, and research.';
+      : 'Muhammad Haseeb builds production AI systems, backend workflows, and ML inference. Explore projects, deployment work, and model compression case studies.';
     document.querySelector('meta[name="description"]')?.setAttribute('content', description);
     const hash = window.location.hash.slice(1);
     if (hash) {
@@ -470,7 +494,7 @@ export default function App() {
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       <div className="site-shell">
-        <Navigation />
+      <Navigation isStudies={isStudies} />
         {isStudies ? <CaseStudies /> : <Home />}
         <Footer />
       </div>
